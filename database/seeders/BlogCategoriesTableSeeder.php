@@ -16,12 +16,12 @@ class BlogCategoriesTableSeeder extends Seeder
     public function run()
     {
         $categories = [];
-
         $cName = 'Без категории';
         $categories[] = [
             'title' => $cName,
             'slug' => Str::slug($cName),
             'parent_id' => 0
+
         ];
 
         for ($i = 1; $i <= 10; $i++) {
