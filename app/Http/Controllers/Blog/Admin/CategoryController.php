@@ -6,14 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
+use App\Repositories\BlogCategoryRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
     /**
+     * @var BlogCategoryRepository
+     */
+    private $blogCategoryRepository;
+
+    public function __construct()
+    {
+        $this->blogCategoryRepository = app(BlogCategoryRepository::class);
+    }
+    /**
      * Display a listing of the resource.
      *
+     * @param BlogCategoryRepository $blogCategoryRepository
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
@@ -30,7 +41,7 @@ class CategoryController extends Controller
     public function create()
     {
         $item = new BlogCategory();
-        $categoryList = BlogCategory::all();
+        $categoryList = $this->blogCategoryRepository->getForComboBox();
 
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
@@ -83,9 +94,11 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $item = BlogCategory::query()->findOrFail($id);
-        $categoryList = BlogCategory::all();
-
+        $item = $this->blogCategoryRepository->getEdit($id);
+        if (empty($item)) {
+            return back()->withErrors(['msg' => "Запись id=[{$id}] не найдена"]);
+        }
+        $categoryList = $this->blogCategoryRepository->getForComboBox();
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
 
@@ -98,7 +111,7 @@ class CategoryController extends Controller
      */
     public function update(BlogCategoryUpdateRequest $request, $id)
     {
-        $item = BlogCategory::query()->find($id);
+        $item = $this->blogCategoryRepository->getEdit($id);
 
         if (empty($item)) {
             return back()
