@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Blog\BaseController;
 use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
 use App\Repositories\BlogCategoryRepository;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Str;
 
-class CategoryController extends Controller
+class CategoryController extends BaseController
 {
     /**
      * @var BlogCategoryRepository
@@ -96,7 +96,7 @@ class CategoryController extends Controller
     {
         $item = $this->blogCategoryRepository->getEdit($id);
         if (empty($item)) {
-            return back()->withErrors(['msg' => "Запись id=[{$id}] не найдена"]);
+            abort(404);
         }
         $categoryList = $this->blogCategoryRepository->getForComboBox();
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));

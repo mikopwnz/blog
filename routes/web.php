@@ -24,6 +24,7 @@ Route::group(['prefix' => 'blog'], function () {
 
 Route::group(['prefix' => 'admin/blog'], function() {
     Route::resource('categories', \App\Http\Controllers\Blog\Admin\CategoryController::class)->names('blog.admin.categories');
+    Route::resource('posts', \App\Http\Controllers\Blog\Admin\PostController::class)->names('blog.admin.posts');
 });
 
 

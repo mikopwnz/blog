@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 class BlogCategoryRepository extends CoreRepository
 {
-    protected function getModelClass()
+    protected function getModelClass(): string
     {
         return ModelEntity::class;
     }
