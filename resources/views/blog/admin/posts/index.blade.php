@@ -22,7 +22,7 @@
                             </thead>
                             <tbody>
                             @foreach($paginator as $post)
-                                <tr @if (!$post->is_published) style="cursor: pointer; background-color: #a0a0a0" @endif
+                                <tr @if (!$post->published_at) style="cursor: pointer; background-color: #a0a0a0" @endif
                                 style="cursor: pointer"
                                     onclick="document.location='{{route('blog.admin.posts.edit', $post->id)}}'">
                                     <td>{{$post->id}}</td>

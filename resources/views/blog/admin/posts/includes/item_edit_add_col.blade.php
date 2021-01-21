@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <a href="{{route('blog.admin.categories.index')}}" class="btn btn-primary">Назад</a>
+                <a href="{{route('blog.admin.posts.index')}}" class="btn btn-primary">Назад</a>
                 <button type="submit" class="btn btn-primary">Сохранить</button>
             </div>
         </div>
