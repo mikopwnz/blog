@@ -21,6 +21,8 @@ class BlogPost extends Model
         'user_id'
     ];
 
+    const UNKNOWN_USER = 1;
+
     public function category()
     {
         return $this->belongsTo(BlogCategory::class);
@@ -29,5 +31,11 @@ class BlogPost extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getCategoryTitleAttribute()
+    {
+        $title = $this->category->title ?? 'Нет категории';
+        return $title;
     }
 }

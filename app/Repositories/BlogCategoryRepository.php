@@ -23,6 +23,14 @@ class BlogCategoryRepository extends CoreRepository
         return $this->startCondition()->find($id);
     }
 
+    public function getAllWithPaginate($perPage = null)
+    {
+        $result = $this->startCondition()
+            ->with('parentCategory:id,title')
+            ->paginate($perPage);
+        return $result;
+    }
+
     public function getForComboBox(): ?Collection
     {
         $result = $this->startCondition()

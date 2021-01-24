@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-
+{{--    <new-component :lala="{{$lala}}"></new-component>--}}
     <div class="container">
+        @include('blog.admin.posts.includes.result_messages')
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <nav class="navbar navbar-toggler navbar-light bg-dark">
@@ -27,7 +28,7 @@
                                     onclick="document.location='{{route('blog.admin.posts.edit', $post->id)}}'">
                                     <td>{{$post->id}}</td>
                                     <td>{{$post->user->name}}</td>
-                                    <td>{{$post->category->title}}</td>
+                                    <td>{{$post->categoryTitle}}</td>
                                     <td>{{$post->title}}</td>
                                     <td>
                                         @if($post->published_at)

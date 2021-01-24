@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Blog\Admin;
 
 
+use App\Http\Requests\BlogPostCreateRequest;
 use App\Http\Requests\BlogPostUpdateRequest;
+use App\Jobs\BlogPostAfterCreateJob;
+use App\Jobs\BlogPostAfterDeleteJob;
+use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
 use Carbon\Carbon;
@@ -38,7 +42,8 @@ class PostController extends BaseController
     public function index()
     {
         $paginator = $this->blogPostRepository->getAllWithPaginate();
-        return view ('blog.admin.posts.index', compact('paginator'));
+        $lala = BlogPost::with('user:id,name','category:id,title')->get();
+        return view ('blog.admin.posts.index', compact('paginator','lala'));
     }
 
     /**
@@ -48,7 +53,9 @@ class PostController extends BaseController
      */
     public function create()
     {
-        //
+        $item = new BlogPost();
+        $categoryList = $this->blogCategoryRepository->getForComboBox();
+        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
     }
 
     /**
@@ -57,9 +64,22 @@ class PostController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BlogPostCreateRequest $request)
     {
-        //
+        $data = $request->input();
+        $item = (new BlogPost())->create($data);
+
+        if ($item->exists) {
+            $job = new BlogPostAfterCreateJob($item);
+            $this->dispatch($job);
+            return redirect()
+                ->route('blog.admin.posts.edit', $item->id)
+                ->with(['success' => 'Успешно сохранено!']);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Ошибка сохранения!'])
+                ->withInput();
+        }
     }
 
     /**
@@ -107,13 +127,7 @@ class PostController extends BaseController
         }
 
         $data = $request->all();
-        if(empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title']);
-        }
 
-        if(empty($item->published_at) && $data['is_published']) {
-            $data['published_at'] = Carbon::now();
-        }
         $result = $item->update($data);
         if ($result) {
             return redirect()
@@ -134,6 +148,17 @@ class PostController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $result = BlogPost::destroy($id);
+        if ($result) {
+            $job = new BlogPostAfterDeleteJob($id);
+            $this->dispatch($job);
+            return redirect()
+                ->route('blog.admin.posts.index')
+                ->with(['success' => "Запись id=[{$id}] удалена"]);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Ошибка удаления!'])
+                ->withInput();
+        }
     }
 }

@@ -29,7 +29,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $paginator = BlogCategory::query()->paginate(15);
+        $paginator = $this->blogCategoryRepository->getAllWithPaginate(15);
         return view('blog.admin.categories.index', compact('paginator'));
     }
 
@@ -55,12 +55,8 @@ class CategoryController extends BaseController
     public function store(BlogCategoryCreateRequest $request)
     {
         $data = $request->input();
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title']);
-        }
 //        $item = new BlogCategory($data);
 //        $item->save();
-
         $item = (new BlogCategory())->create($data);
 
         if ($item->exists) {
@@ -142,6 +138,15 @@ class CategoryController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $result = BlogCategory::destroy($id);
+        if ($result) {
+            return redirect()
+                ->route('blog.admin.categories.index')
+                ->with(['success' => "Запись id=[{$id}] удалена"]);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Ошибка удаления!'])
+                ->withInput();
+        }
     }
 }

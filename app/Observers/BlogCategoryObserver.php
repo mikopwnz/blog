@@ -3,9 +3,15 @@
 namespace App\Observers;
 
 use App\Models\BlogCategory;
+use Illuminate\Support\Str;
 
 class BlogCategoryObserver
 {
+    public function creating(BlogCategory $blogCategory)
+    {
+        $this->setSlug($blogCategory);
+    }
+
     /**
      * Handle the BlogCategory "created" event.
      *
@@ -14,7 +20,12 @@ class BlogCategoryObserver
      */
     public function created(BlogCategory $blogCategory)
     {
-        //
+
+    }
+
+    public function updating (BlogCategory $blogCategory)
+    {
+        $this->setSlug($blogCategory);
     }
 
     /**
@@ -59,5 +70,12 @@ class BlogCategoryObserver
     public function forceDeleted(BlogCategory $blogCategory)
     {
         //
+    }
+
+    protected function setSlug(BlogCategory $blogCategory)
+    {
+        if(empty($blogCategory->slug)) {
+            $blogCategory->slug = Str::slug($blogCategory->title);
+        }
     }
 }

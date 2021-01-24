@@ -3,6 +3,7 @@
 @section('content')
 
     <div class="container">
+        @include('blog.admin.posts.includes.result_messages')
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <nav class="navbar navbar-toggler navbar-light bg-dark">
@@ -25,7 +26,8 @@
                                     <td>
                                         <a href="{{route('blog.admin.categories.edit', $item->id)}}">{{$item->title}}</a>
                                     </td>
-                                    <td>{{ $item->parent_id }}</td>
+                                    <td>{{ $item->parentTitle }}
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

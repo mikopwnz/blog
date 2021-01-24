@@ -47,4 +47,24 @@
                         </div>
                     </div>
                 </form>
+                @if ($item->exists)
+                    <br>
+                    <form method="POST" action="{{route('blog.admin.categories.destroy', $item->id)}}">
+                        @method('DELETE')
+                        @csrf
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="card">
+                                        <div class="card-body ml-auto">
+                                            <button type="submit" class="btn btn-link">Удалить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4"></div>
+                            </div>
+                        </div>
+
+                    </form>
+    @endif
 @endsection
