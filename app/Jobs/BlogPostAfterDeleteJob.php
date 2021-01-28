@@ -31,7 +31,15 @@ class BlogPostAfterDeleteJob implements ShouldQueue
      */
     public function handle()
     {
-        sleep(20);
+        sleep(5);
+        logs()->warning("Удалена запись в блоге [{$this->blogPostId}]");
+        logs()->warning("Удалена запись в блоге [{$this->blogPostId}]");
+        logs()->warning("Удалена запись в блоге [{$this->blogPostId}]");
+        logs()->warning("Удалена запись в блоге [{$this->blogPostId}]");
+        logs()->warning("Удалена запись в блоге [{$this->blogPostId}]");
+        logs()->warning("Удалена запись в блоге [{$this->blogPostId}]");
+        logs()->warning("Удалена запись в блоге [{$this->blogPostId}]");
+        logs()->warning("Удалена запись в блоге [{$this->blogPostId}]");
         logs()->warning("Удалена запись в блоге [{$this->blogPostId}]");
     }
 }
